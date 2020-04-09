@@ -552,12 +552,15 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				onRefresh();
 
 				// Check for listener beans and register them.
+				// 检查侦听器bean，并注册它们。
 				registerListeners();
 
 				// Instantiate all remaining (non-lazy-init) singletons.
+				// 实例化所有剩余的(非惰性初始化)单例。
 				finishBeanFactoryInitialization(beanFactory);
 
 				// Last step: publish corresponding event.
+				// 发布相应的事件。
 				finishRefresh();
 			}
 
@@ -848,6 +851,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 */
 	protected void finishBeanFactoryInitialization(ConfigurableListableBeanFactory beanFactory) {
 		// Initialize conversion service for this context.
+		// 为我们的bean工厂创建类型转化器 convert
 		if (beanFactory.containsBean(CONVERSION_SERVICE_BEAN_NAME) &&
 				beanFactory.isTypeMatch(CONVERSION_SERVICE_BEAN_NAME, ConversionService.class)) {
 			beanFactory.setConversionService(
@@ -862,6 +866,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		}
 
 		// Initialize LoadTimeWeaverAware beans early to allow for registering their transformers early.
+		// 处理关于aspectj
 		String[] weaverAwareNames = beanFactory.getBeanNamesForType(LoadTimeWeaverAware.class, false, false);
 		for (String weaverAwareName : weaverAwareNames) {
 			getBean(weaverAwareName);
@@ -871,9 +876,11 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		beanFactory.setTempClassLoader(null);
 
 		// Allow for caching all bean definition metadata, not expecting further changes.
+		// 冻结所有的bean定义，说明注册的bean定义将不被修改或任何进一步的处理
 		beanFactory.freezeConfiguration();
 
 		// Instantiate all remaining (non-lazy-init) singletons.
+		// 实例话所有的单实例bean
 		beanFactory.preInstantiateSingletons();
 	}
 

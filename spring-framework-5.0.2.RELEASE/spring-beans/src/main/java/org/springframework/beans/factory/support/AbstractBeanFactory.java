@@ -195,8 +195,16 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	// Implementation of BeanFactory interface
 	//---------------------------------------------------------------------
 
+	/**
+	 * 该方法是个空壳方法，没有任何的实现逻辑，真正实现逻辑的是doGetBean()方法中
+	 * 该方法是实现了BeanFactory的getBean(String name) 接口
+	 * @param name bean的名称 该名称也有可能是bean的alies（别名）
+	 * @return 我们的单例对象
+	 * @throws BeansException
+	 */
 	@Override
 	public Object getBean(String name) throws BeansException {
+		//真正获取bean的逻辑
 		return doGetBean(name, null, null, false);
 	}
 
@@ -227,14 +235,13 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
 	/**
 	 * Return an instance, which may be shared or independent, of the specified bean.
-	 * @param name the name of the bean to retrieve
-	 * @param requiredType the required type of the bean to retrieve
-	 * @param args arguments to use when creating a bean instance using explicit arguments
-	 * (only applied when creating a new instance as opposed to retrieving an existing one)
-	 * @param typeCheckOnly whether the instance is obtained for a type check,
-	 * not for actual use
-	 * @return an instance of the bean
-	 * @throws BeansException if the bean could not be created
+	 * @param name bean的名称，也有可能是bean的别名
+	 * @param requiredType 需要获取bean的类型
+	 * @param args 通过该参数传进来，到调用构造方法的时候会发现有多个构造方法，我们就可以通过该来指定想要的构造方法，
+	 *             不需要去推断构造方法（因为推断构造方法很耗时间）
+	 * @param typeCheckOnly 判断当前的bean是不是一个检查类型的bean 这个类型用的很少
+	 * @return 返回一个bean的实例
+	 * @throws BeansException 如果bean不能被创建，那么就抛异常
 	 */
 	@SuppressWarnings("unchecked")
 	protected <T> T doGetBean(final String name, @Nullable final Class<T> requiredType,
@@ -257,6 +264,10 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 					logger.debug("Returning cached instance of singleton bean '" + beanName + "'");
 				}
 			}
+			/**
+			 * 如果 sharedInstance 是一个普通的单例 bean，下面的方法会直接返回，
+			 * 但如果 sharedInstance 是FactoryBean 类型的，则需要调用getObject 工厂方法获取真正的bean
+			 */
 			bean = getObjectForBeanInstance(sharedInstance, name, beanName, null);
 		}
 
@@ -268,20 +279,29 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			}
 
 			// Check if bean definition exists in this factory.
+			/**
+			 * 判断 AbstractBeanFactory 工厂是否有父工厂（一般情况下AbstractBeanFactory是没有父工厂，因为AbstractBeanFactory直接是抽象类，不存在父工厂）
+			 * 一般情况下，只有Spring 和SpringMvc整合的时候才会有父子容器的概念
+			 */
 			BeanFactory parentBeanFactory = getParentBeanFactory();
+			//若存在父工厂，切当前的bean工厂不存在当前的bean定义，那么bean定义是存在于父工厂中
 			if (parentBeanFactory != null && !containsBeanDefinition(beanName)) {
 				// Not found -> check parent.
+				//获取bean的原著名称
 				String nameToLookup = originalBeanName(name);
+				//若为 AbstractBeanFactory 类型，委托父类处理
 				if (parentBeanFactory instanceof AbstractBeanFactory) {
 					return ((AbstractBeanFactory) parentBeanFactory).doGetBean(
 							nameToLookup, requiredType, args, typeCheckOnly);
 				}
 				else if (args != null) {
+					//委托给构造函数 getBean() 处理
 					// Delegation to parent with explicit args.
 					return (T) parentBeanFactory.getBean(nameToLookup, args);
 				}
 				else {
 					// No args -> delegate to standard getBean method.
+					// 没有 args ，委托给标准的 getBean() 处理
 					return parentBeanFactory.getBean(nameToLookup, requiredType);
 				}
 			}
@@ -291,17 +311,27 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			}
 
 			try {
+				/**
+				 * 从容器上获取beanName 相应的GenericBeanDegfinition 对象，并将其转化为 RootBeanDefinition 对象
+				 */
 				final RootBeanDefinition mbd = getMergedLocalBeanDefinition(beanName);
+				//检查当前创建的bean定义是不是抽象的bean定义
 				checkMergedBeanDefinition(mbd, beanName, args);
 
 				// Guarantee initialization of beans that the current bean depends on.
+				//处理 dependsOn 的依赖（这个不是我们所谓的循环依赖 而是 bean 创建前后的依赖）
+				// 依赖 bean 的名称
 				String[] dependsOn = mbd.getDependsOn();
 				if (dependsOn != null) {
+					//<1> 若给定的依赖 bean 已经注册为依赖给定的bean
+					//即循环依赖的情况，抛出BeanCreationException
 					for (String dep : dependsOn) {
+						//beanName是正在创建的bean，dep是beanName的依赖bean
 						if (isDependent(beanName, dep)) {
 							throw new BeanCreationException(mbd.getResourceDescription(), beanName,
 									"Circular depends-on relationship between '" + beanName + "' and '" + dep + "'");
 						}
+						//保存的是依赖 beanName之间的映射关系：依赖beanName -> beanName 的集合
 						registerDependentBean(dep, beanName);
 						getBean(dep);
 					}
@@ -1317,6 +1347,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	protected void checkMergedBeanDefinition(RootBeanDefinition mbd, String beanName, @Nullable Object[] args)
 			throws BeanDefinitionStoreException {
 
+		//抽象的bean是不能被实例化的
 		if (mbd.isAbstract()) {
 			throw new BeanIsAbstractException(beanName);
 		}
