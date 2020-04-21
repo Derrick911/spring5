@@ -240,13 +240,13 @@ public enum HttpStatus {
 	 */
 	PAYLOAD_TOO_LARGE(413, "Payload Too Large"),
 	/**
-	 * {@code 413 Request Entity Too Large}.
+	 * {@code 413 Request entity Too Large}.
 	 * @see <a href="http://tools.ietf.org/html/rfc2616#section-10.4.14">HTTP/1.1, section 10.4.14</a>
 	 * @deprecated in favor of {@link #PAYLOAD_TOO_LARGE} which will be
 	 * returned from {@code HttpStatus.valueOf(413)}
 	 */
 	@Deprecated
-	REQUEST_ENTITY_TOO_LARGE(413, "Request Entity Too Large"),
+	REQUEST_ENTITY_TOO_LARGE(413, "Request entity Too Large"),
 	/**
 	 * {@code 414 URI Too Long}.
 	 * @since 4.1
@@ -305,10 +305,10 @@ public enum HttpStatus {
 	@Deprecated
 	DESTINATION_LOCKED(421, "Destination Locked"),
 	/**
-	 * {@code 422 Unprocessable Entity}.
+	 * {@code 422 Unprocessable entity}.
 	 * @see <a href="http://tools.ietf.org/html/rfc4918#section-11.2">WebDAV</a>
 	 */
-	UNPROCESSABLE_ENTITY(422, "Unprocessable Entity"),
+	UNPROCESSABLE_ENTITY(422, "Unprocessable entity"),
 	/**
 	 * {@code 423 Locked}.
 	 * @see <a href="http://tools.ietf.org/html/rfc4918#section-11.3">WebDAV</a>

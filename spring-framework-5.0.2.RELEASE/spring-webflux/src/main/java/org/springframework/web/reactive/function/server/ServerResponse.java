@@ -192,7 +192,7 @@ public interface ServerResponse {
 
 	/**
 	 * Create a builder with an
-	 * {@linkplain HttpStatus#UNPROCESSABLE_ENTITY 422 Unprocessable Entity} status.
+	 * {@linkplain HttpStatus#UNPROCESSABLE_ENTITY 422 Unprocessable entity} status.
 	 * @return the created builder
 	 */
 	static BodyBuilder unprocessableEntity() {

@@ -593,6 +593,8 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * active flag as well as performing any initialization of property sources.
 	 */
 	protected void prepareRefresh() {
+		// 记录启动时间，
+		// 将 active 属性设置为 true，closed 属性设置为 false，它们都是 AtomicBoolean 类型
 		this.startupDate = System.currentTimeMillis();
 		this.closed.set(false);
 		this.active.set(true);
@@ -606,6 +608,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 		// Validate that all properties marked as required are resolvable
 		// see ConfigurablePropertyResolver#setRequiredProperties
+		// 校验 xml 配置文件
 		getEnvironment().validateRequiredProperties();
 
 		// Allow for the collection of early ApplicationEvents,
@@ -623,13 +626,18 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	}
 
 	/**
+	 * 创建 Bean 容器，加载并注册 Bean
+	 * 注意，这个方法是全文最重要的部分之一，这里将会初始化 BeanFactory、加载 Bean、注册 Bean 等等。
+	 * 当然，这步结束后，Bean 并没有完成初始化。
 	 * Tell the subclass to refresh the internal bean factory.
 	 * @return the fresh BeanFactory instance
 	 * @see #refreshBeanFactory()
 	 * @see #getBeanFactory()
 	 */
 	protected ConfigurableListableBeanFactory obtainFreshBeanFactory() {
+		// 关闭旧的 BeanFactory (如果有)，创建新的 BeanFactory，加载 Bean 定义、注册 Bean 等等
 		refreshBeanFactory();
+		// 返回刚刚创建的 BeanFactory
 		ConfigurableListableBeanFactory beanFactory = getBeanFactory();
 		if (logger.isDebugEnabled()) {
 			logger.debug("Bean factory for " + getDisplayName() + ": " + beanFactory);

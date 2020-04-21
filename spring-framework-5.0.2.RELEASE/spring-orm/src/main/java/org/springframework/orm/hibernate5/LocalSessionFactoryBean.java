@@ -285,7 +285,7 @@ public class LocalSessionFactoryBean extends HibernateExceptionTranslator
 	/**
 	 * Specify custom type filters for Spring-based scanning for entity classes.
 	 * <p>Default is to search all specified packages for classes annotated with
-	 * {@code @javax.persistence.Entity}, {@code @javax.persistence.Embeddable}
+	 * {@code @javax.persistence.entity}, {@code @javax.persistence.Embeddable}
 	 * or {@code @javax.persistence.MappedSuperclass}.
 	 * @see #setPackagesToScan
 	 */

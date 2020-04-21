@@ -201,7 +201,7 @@ public abstract class HtmlUtils {
 	 * and all reference types (decimal, hex, and entity).
 	 * <p>Correctly converts the following formats:
 	 * <blockquote>
-	 * &amp;#<i>Entity</i>; - <i>(Example: &amp;amp;) case sensitive</i>
+	 * &amp;#<i>entity</i>; - <i>(Example: &amp;amp;) case sensitive</i>
 	 * &amp;#<i>Decimal</i>; - <i>(Example: &amp;#68;)</i><br>
 	 * &amp;#x<i>Hex</i>; - <i>(Example: &amp;#xE5;) case insensitive</i><br>
 	 * </blockquote>

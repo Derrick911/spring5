@@ -1,4 +1,4 @@
-package com.zzd;
+package com.zzd.entity;
 
 public class User {
 
