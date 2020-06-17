@@ -1,5 +1,8 @@
 package com.zzd.entity;
 
+import org.springframework.stereotype.Component;
+
+
 public class User {
 
 	private int uid;
