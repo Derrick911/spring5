@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 @Configuration
-@ComponentScan(value = "com.zzd")
+@ComponentScan(value = "com.zzd.ioc")
 @EnableAspectJAutoProxy
 public class JavaConfig {
 

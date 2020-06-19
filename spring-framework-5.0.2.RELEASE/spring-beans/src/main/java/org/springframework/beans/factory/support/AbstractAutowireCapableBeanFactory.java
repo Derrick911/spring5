@@ -1386,6 +1386,9 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 						InstantiationAwareBeanPostProcessor ibp = (InstantiationAwareBeanPostProcessor) bp;
 						// 这里有个非常有用的 BeanPostProcessor 进到这里: AutowiredAnnotationBeanPostProcessor
 						// 对采用 @Autowired、@Value 注解的依赖进行设值，这里的内容也是非常丰富的，不过本文不会展开说了，感兴趣的读者请自行研究
+
+						//@resource 注入使用的是：
+						//@Autowired 注入使用的处理器 AutowiredAnnotationBeanPostProcessor
 						pvs = ibp.postProcessPropertyValues(pvs, filteredPds, bw.getWrappedInstance(), beanName);
 						if (pvs == null) {
 							return;
