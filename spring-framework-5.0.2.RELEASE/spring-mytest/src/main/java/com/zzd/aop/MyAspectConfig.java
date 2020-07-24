@@ -3,14 +3,20 @@ package com.zzd.aop;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.stereotype.Component;
 
+@Component
 @Aspect
 public class MyAspectConfig {
 
+
+	//匹配com.aop.service.impl.ProductServiceImpl类下方法名以select或delete开头的所有方法
+	@Pointcut(value= "execution(* com.zzd.ioc.IndexService.*(..))")
+	public void matchCondition() {}
 	/**
 	 * 前置通知
 	 */
-	@Before("execution(* com.zzd.service.impl.UserServiceImpl.*(..))")
+	@Before("matchCondition()")
 	public void before(){
 		System.out.println("前置通知....");
 	}
